@@ -1,17 +1,18 @@
 {
   "name": "airbean",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "FEE",
+  "main": "server.js",
   "scripts": {
+    "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Shirak22/airbean_examination.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["airbean", "examination "],
+  "author": "Shirak Soghomonian",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Shirak22/airbean_examination/issues"
