@@ -11,7 +11,10 @@
     "type": "git",
     "url": "git+https://github.com/Shirak22/airbean_examination.git"
   },
-  "keywords": ["airbean", "examination "],
+  "keywords": [
+    "airbean",
+    "examination "
+  ],
   "author": "Shirak Soghomonian",
   "license": "ISC",
   "bugs": {
@@ -19,7 +22,7 @@
   },
   "homepage": "https://github.com/Shirak22/airbean_examination#readme",
   "dependencies": {
-    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
     "express": "^4.18.2",
     "nedb-promise": "^2.0.1",
     "nodemon": "^2.0.22"
