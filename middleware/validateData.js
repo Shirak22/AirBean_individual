@@ -1,5 +1,7 @@
 
 const {messages} = require('../errorMessages');
+const {orderNumberGenerator} = require('../assets/functionTools');
+
 const {writeProductsInDB,getAllProducts,findProductByName} = require('../DBfunctions/products'); 
 
 
@@ -12,10 +14,9 @@ function validateOrdreData(req,res,next){
             res.status(400).json({error:messages.badrequest,fix:'order property must be an array'}); 
         }
     }else {
-        res.status(400).json({error:messages.badrequest,fix:'The request must include details property'}); 
+        res.status(400).json({error:messages.badrequest,fix:'The request must include details:{order:[]} property'}); 
     }
 }
-
 
 async function checkProductsExistsInDB(req,res,next){
     const products = await getAllProducts(); // imports  product from DB 
@@ -59,7 +60,22 @@ async function checkProductsExistsInDB(req,res,next){
    
 }
 
+async function checkUserStatus(req,res,next){
+    const userStatus = req.body?.details.status; 
+
+    //to be updated when creating log in system 
+    //make if condition to check if the user exists and is logged in 
+    const userInDB = undefined;
+        if(!userInDB){   //checking if the user is undefind or if not logged In it will be a guest 
+            req.body.user = "GUEST"
+        }else if(userInDB) {//otherwise it will be logged in and the order will be added to the user account object in DB 
+            req.body.user = userInDB;
+        }
+    next();
 
 
-module.exports = {validateOrdreData,checkProductsExistsInDB};
+}
+
+
+module.exports = {validateOrdreData,checkProductsExistsInDB,checkUserStatus};
 
