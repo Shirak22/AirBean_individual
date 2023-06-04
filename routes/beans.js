@@ -1,6 +1,7 @@
 const {Router} = require('express'); 
 const router = Router();
 const {messages} = require('../errorMessages');
+const postss = require('../json/posts.json');
 const {writeProductsInDB,getAllProducts} = require('../db-functions/products'); 
 const {addOrder,findOrderByOrderNr} = require('../db-functions/orders');
 const {addUser,findUser,findUserById,addToUserHistory} = require('../db-functions/user');
@@ -23,6 +24,12 @@ router.get('/', async (req, res) => {
     res.json(response);
     //view in json format on this route 
 });
+
+router.get('/about', async (req,res)=> {
+    //importing the data directly from JSON file,  
+    let {posts} = postss; 
+    res.json({success:true, post:posts});
+})
 
 router.post('/order', validateOrdreData, checkProductsExistsInDB, checkUserStatus,totalPrice,checkCoupons, (req, res) => {
 

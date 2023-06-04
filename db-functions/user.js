@@ -3,17 +3,16 @@ const usersDB = new nedb({filename: './database/users.db', autoload:true});
 
 
 function addUser(user){
-   
     usersDB.insert(user); 
 }
 
 async function findUser(username){
-    const result = usersDB.findOne({username:username}); 
+    const result = await usersDB.findOne({username:username}); 
     return result;
 }
 
 async function findUserById(userId){
-    const result = usersDB.findOne({userId:userId}); 
+    const result = await usersDB.findOne({userId:userId}); 
     return result;
 }
 async function updateStatus(userId,status){
