@@ -92,8 +92,8 @@ router.get('/order/status/:ordernr',async (req,res)=> {
                 total_price: order[0].totalPrice,
                 //if discountPrice exists it will output a price based on the value of the coupon
                 // final_price: !order[0].discountPrice ? order[0].totalPrice.toFixed(2) : parseFloat((order[0].totalPrice - order[0].discountPrice).toFixed(2)),
-                coupon:order[0].discountValue ? order[0].discountValue : '0' + '%',
-                discount: order[0].discountPrice ? order[0].discountPrice : '0' + ':-',
+                coupon:(order[0].discountValue ? order[0].discountValue : '0') + '%',
+                discount: (order[0].discountPrice ? order[0].discountPrice : '0') + ':-',
                 final_price: order[0].discountPrice && (Date.now() -  (order[0].timestamp + order[0].estimated_delivery)) ? parseFloat((order[0].totalPrice - order[0].discountPrice).toFixed(2)) : parseFloat(order[0].totalPrice.toFixed(2)),
                 userId:order[0].userId,
                 order:order[0].order
