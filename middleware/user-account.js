@@ -26,9 +26,7 @@ async function usernameExistence(req,res,next){
     const user = await findUser(req.body.username.toLowerCase());
         if(!user){
             next();
-            console.log(user);
         }else {
-            console.log(user);
 
             res.status(400).json(Object.assign(messages.badrequest,{fix:'the username is taken, please try another one! '}));
         }
