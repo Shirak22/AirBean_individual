@@ -89,7 +89,6 @@ router.get('/order/status/:ordernr',async (req,res)=> {
                 //returns status based on the diff between the time now and the time order placed, 
                 order_status : (Date.now() -  (order.timestamp + order.estimated_delivery)) > 0 ? 'The order deliverd! ' : ' On its way' ,
                 total_price: order.totalPrice,
-
                 //if voucherPrice exists it will output a price based on the value of the coupon
                 final_price: !order.voucherPrice ? order.totalPrice.toFixed(2): parseFloat((order.totalPrice - order[0].voucherPrice).toFixed(2)),
                 user:order.user,
