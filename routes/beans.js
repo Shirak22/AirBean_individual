@@ -5,7 +5,7 @@ const {writeProductsInDB,getAllProducts} = require('../db-functions/products');
 const {addOrder,findOrderByOrderNr} = require('../db-functions/orders');
 const {addUser,findUser,findUserById,addToUserHistory} = require('../db-functions/user');
 const {validateOrdreData,checkProductsExistsInDB,checkUserStatus,totalPrice} = require('../middleware/validate-order-data'); 
-const {orderNumberGenerator} = require('../assets/functionTools');
+const {orderNumberGenerator,convertTimestamp,convertTimeToMillis} = require('../assets/functionTools');
 //BEANS ROUTES
 
 
@@ -36,12 +36,18 @@ router.post('/order', validateOrdreData, checkProductsExistsInDB, checkUserStatu
         //generate timestamp using Date API to track the time and calculate the delivery time #--
         const timeStamp = Date.now();
         //creating order object with structure
+
+        //adding estimated delivery time // 
+
         let order = {
             orderNr: orderNr,
-            user: req.body.user,
             userId:req.body.user !== 'GUEST' ? userId : 'GUEST',
-            timestamp: timeStamp,
             totalPrice:req.body.totalPrice,
+            date: convertTimestamp('date',timeStamp),
+
+
+            estimated_delivery: convertTimeToMillis('minutes',1), //the random number here is  range between 5 and 1 minute
+            timestamp: timeStamp,
             order:req.body.details.order
         }
 
@@ -70,12 +76,18 @@ router.post('/order', validateOrdreData, checkProductsExistsInDB, checkUserStatu
 
 router.get('/order/status/:ordernr',async (req,res)=> {
     const orderNr = req.params.ordernr;
+
+
     try{
         const order = await findOrderByOrderNr(orderNr); 
         if(order.length > 0){
             let setOrder = {
                 orderNr:orderNr,
-                date: new Date(order[0].timestamp).toLocaleDateString(),
+                date: convertTimestamp('date',order[0].timestamp),
+                order_placed:convertTimestamp('time',order[0].timestamp),
+                Estimated_Delivery: convertTimestamp('date',order[0].timestamp + order[0].estimated_delivery) + ' , ' + convertTimestamp('time',order[0].timestamp + order[0].estimated_delivery),
+                //returns status based on the diff between the time now and the time order placed, 
+                order_status : (Date.now() -  (order[0].timestamp + order[0].estimated_delivery)) > 0 ? 'The order deliverd! ' : ' On its way' ,
                 total_price: order[0].totalPrice,
                 user:order[0].user,
                 order:order[0].order

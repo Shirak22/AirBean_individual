@@ -46,14 +46,16 @@ async function checkProductsExistsInDB(req,res,next){
     if(checkNameUndefined){
         res.json({
                     success:false,
-                    error: 'No such product in our database  ',
+                    error: 'No such product in our database',
                     productsAvailable: productNames.join(',') 
                 });
+         checkNameUndefined = false;
     }else if(checkPriceUndefined){
         res.json({
                     success:false,
                     error: 'Please don\'t change the price! '
                 });
+        checkPriceUndefined = false; 
     }else {
         next();
     }

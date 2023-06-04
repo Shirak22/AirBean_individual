@@ -1,3 +1,2 @@
-{"orderNr":"8Q4DE74942","user":"shirak","userId":"F9Gh1hsh6h","timestamp":1685840604942,"totalPrice":78,"order":[{"name":"Bryggkaffe","price":39},{"name":"Bryggkaffe","price":39}],"_id":"5M0kvrtrLD9Yoo3N"}
-{"orderNr":"RQ0GKB5743","user":"shirak","userId":"F9Gh1hsh6h","timestamp":1685841775743,"totalPrice":78,"order":[{"name":"Bryggkaffe","price":39},{"name":"Bryggkaffe","price":39}],"_id":"ZDiyUgHgNxiEPBSb"}
-{"orderNr":"N07E6L4717","user":"GUEST","userId":"GUEST","timestamp":1685839324717,"totalPrice":156,"order":[{"name":"Bryggkaffe","price":39},{"name":"Bryggkaffe","price":39},{"name":"Bryggkaffe","price":39},{"name":"Bryggkaffe","price":39}],"_id":"tmZsSyXxyDMKQnZO"}
+{"orderNr":"FFGG8E9880","userId":"7B7Er1PiHP","totalPrice":99,"date":"2023-06-04","estimated_delivery":60000,"timestamp":1685880459880,"order":[{"name":"Semla","price":50},{"name":"Caffè Doppio","price":49}],"_id":"ln6punBSUHCDukYP"}
+{"orderNr":"DBR8MO0190","userId":"7B7Er1PiHP","totalPrice":88,"date":"2023-06-04","estimated_delivery":60000,"timestamp":1685881010190,"order":[{"name":"Bryggkaffe","price":39},{"name":"Caffè Doppio","price":49}],"_id":"M110LScCYtUBSBYr"}

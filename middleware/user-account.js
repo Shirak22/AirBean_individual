@@ -1,6 +1,7 @@
 const {messages} = require('../errorMessages');
 const {addUser,findUser,updateStatus,findUserById} = require('../db-functions/user');
 const {addOrder,findOrderByOrderNr,findOrderByuserId} = require('../db-functions/orders');
+const {orderNumberGenerator,convertTimestamp,convertTimeToMillis} = require('../assets/functionTools');
 
 const {hashedCheck,hashPassword} = require('../assets/crypting'); 
 
@@ -82,7 +83,13 @@ async function userIdCheck(req,res,next){
             if(user && user.islogged){
                 const orders = await findOrderByuserId(userId);
                 orders.map(order => {
+                    let deliveryTime = order.estimated_delivery; 
+                    order.estimated_delivery = convertTimestamp('date',order.timestamp + deliveryTime) + ',' + convertTimestamp('time',order.timestamp + deliveryTime);
+                    order.order_status =  (Date.now() -  (order.timestamp + deliveryTime)) > 0 ? 'The order deliverd! ' : ' On its way' ,
                     delete order._id;
+                    delete order.timestamp;
+                    delete order.user;
+                    delete order.userId;
                 })
                  response = {
                     success:true,
