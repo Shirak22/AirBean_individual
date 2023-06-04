@@ -1,1 +1,4 @@
 node_modules
+database/orders.db
+database/products.db
+database/users.db

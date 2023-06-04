@@ -26,7 +26,7 @@ app.use('/', mainRoutes);
 
 //not found pages 
 app.all('*',(req,res)=> {
-     res.json(messages.notFound);
+     res.status(404).json(messages.notFound);
 })
 
 

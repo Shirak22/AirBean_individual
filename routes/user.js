@@ -1,9 +1,10 @@
 const {Router} = require('express'); 
 const router = Router();
-const {hashedCheck,hashPassword} = require('../assets/crypting'); 
+const {addUser,findUser} = require('../db-functions/user');
+const {hashPassword} = require('../assets/crypting'); 
 
 const {userIdGenerator} = require('../assets/functionTools');
-const {checkUserdata,usernameExistence}=require('../middleware/user-account')
+const {checkUserdata,usernameExistence,userAuth,logOut,userIdCheck}=require('../middleware/user-account')
 
 
 
@@ -18,12 +19,33 @@ router.post('/signup',checkUserdata,usernameExistence,async (req,res)=> {
         //generate Unique userID #---
         const userId= userIdGenerator(req.body.username,10); //generating user id based on date and username. 
         //hash the password using bcryptjs
-        const password = await hashPassword(req.body.password); 
+        const password = await hashPassword(req.body.password);
+            let user = {
+                userId: userId,
+                username:req.body.username.toLowerCase(),
+                password:password,
+                islogged:false,
+                userHistory:[]
+            }
+
+            
         //save the user in users.db
+        addUser(user);
         
-    res.json({request:password});
+    res.json(user);
 });
 
+router.post('/login',userAuth, async(req,res)=> {
+    res.json({success:true, message:"You are logged in!"});
+}); 
+
+router.post('/logout',logOut, (req,res)=> {
+    res.json({success:true, message:"You are logged out!"});
+})
+
+router.post('/history',userIdCheck,(req,res)=> {
+    res.sendStatus(200); 
+}); 
 
 module.exports = router; 
 

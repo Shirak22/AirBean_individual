@@ -1,8 +1,8 @@
 
 const {messages} = require('../errorMessages');
 const {orderNumberGenerator} = require('../assets/functionTools');
-
-const {writeProductsInDB,getAllProducts,findProductByName} = require('../db-functions/products'); 
+const {addUser,findUser,findUserById} = require('../db-functions/user');
+const {getAllProducts,findProductByName} = require('../db-functions/products'); 
 
 
 function validateOrdreData(req,res,next){
@@ -61,21 +61,28 @@ async function checkProductsExistsInDB(req,res,next){
 }
 
 async function checkUserStatus(req,res,next){
-    const userStatus = req.body?.details.status; 
-    
-    //to be updated when creating log in system 
-    //make if condition to check if the user exists and is logged in 
-    const userInDB = "Shirak";
-        if(!userInDB){   //checking if the user is undefind or if not logged In it will be a guest 
-            req.body.user = "GUEST"
-        }else if(userInDB) {//otherwise it will be logged in and the order will be added to the user account object in DB 
-            req.body.user = userInDB;
+    const userIdByUser = req.body?.details?.userId; 
+    const user = await findUserById(userIdByUser); 
+
+        if(user && user.islogged){
+            req.body.user = user.username;
+            next(); 
+        }else {
+            req.body.user = "GUEST"; 
+            next(); 
         }
-    next();
-
-
+        //to check if the user exists and is logged in 
 }
 
+async function totalPrice(req,res,next){
+   const orders =  req.body.details.order;
+   let totalPrice = 0;  
+   orders && orders.forEach(order => {
+        totalPrice += parseInt(order.price); 
+   });
+   req.body.totalPrice = totalPrice; 
+   next();
+}
 
-module.exports = {validateOrdreData,checkProductsExistsInDB,checkUserStatus};
+module.exports = {validateOrdreData,checkProductsExistsInDB,checkUserStatus,totalPrice};
 

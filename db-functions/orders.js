@@ -12,4 +12,9 @@ async function findOrderByOrderNr(orderNr){
     const order = orderDB.find({orderNr:orderNr}); 
     return order;
 }
-module.exports = {addOrder,findOrderByOrderNr}
+
+async function findOrderByuserId(userId){
+    const order = orderDB.find({userId:userId}); 
+    return order;
+}
+module.exports = {addOrder,findOrderByOrderNr,findOrderByuserId}
