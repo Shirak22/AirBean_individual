@@ -2,6 +2,8 @@
 const {messages} = require('../errorMessages');
 const {orderNumberGenerator} = require('../assets/functionTools');
 const {addUser,findUser,findUserById} = require('../db-functions/user');
+const {addCoupon,findCoupon} = require('../db-functions/coupon');
+
 const {getAllProducts,findProductByName} = require('../db-functions/products'); 
 
 
@@ -86,5 +88,28 @@ async function totalPrice(req,res,next){
    next();
 }
 
-module.exports = {validateOrdreData,checkProductsExistsInDB,checkUserStatus,totalPrice};
+async function checkCoupons(req,res,next){
+    const mabyeCoupon = req.body.details?.coupon; 
+    if(!mabyeCoupon){
+        req.body.details.coupon = {};
+        next(); 
+    }else if(mabyeCoupon){
+        const found = await findCoupon(mabyeCoupon); 
+        if(!found){
+            req.body.details.coupon = {}; 
+            next();
+        }else {
+            req.body.details.coupon = {
+                coupon:found.Coupon,
+                expires:found.expires,
+                value:found.value
+            }
+           
+            next();
+        }
+    }else {
+        res.json(messages.badrequest);
+    }
+}
+module.exports = {validateOrdreData,checkProductsExistsInDB,checkUserStatus,totalPrice,checkCoupons};
 

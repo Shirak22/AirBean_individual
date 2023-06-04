@@ -29,10 +29,10 @@ function userIdGenerator(username,digits){
 function fisherShuffle(username){
     const arr = username.toString().split(''); 
     for (let x = 0; x < arr.length; x++) {
-        let j= Math.floor(Math.random() * x ); //random char in the array 
+        let j= Math.floor(Math.random() * x ); //random place in the array 
         let k = arr[x]; // current original char in arr
         arr[x] = arr[j]; // change the original to the random one from array
-        arr[j] = k //change the random one we have in array to the current char. 
+        arr[j] = k //change the random one we have in array to the current place. 
         //its all about exchanging the places 
     } 
     return arr.join(""); 
@@ -70,4 +70,4 @@ function convertTimeToMillis(time,value){
     }
 }
 
-module.exports = {orderNumberGenerator,userIdGenerator,convertTimestamp,convertTimeToMillis}
+module.exports = {orderNumberGenerator,userIdGenerator,convertTimestamp,convertTimeToMillis,fisherShuffle}

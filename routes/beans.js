@@ -4,8 +4,9 @@ const {messages} = require('../errorMessages');
 const {writeProductsInDB,getAllProducts} = require('../db-functions/products'); 
 const {addOrder,findOrderByOrderNr} = require('../db-functions/orders');
 const {addUser,findUser,findUserById,addToUserHistory} = require('../db-functions/user');
-const {validateOrdreData,checkProductsExistsInDB,checkUserStatus,totalPrice} = require('../middleware/validate-order-data'); 
-const {orderNumberGenerator,convertTimestamp,convertTimeToMillis} = require('../assets/functionTools');
+const {addCoupon,findCoupon} = require('../db-functions/coupon');
+const {validateOrdreData,checkProductsExistsInDB,checkUserStatus,totalPrice,checkCoupons} = require('../middleware/validate-order-data'); 
+const {orderNumberGenerator,convertTimestamp,convertTimeToMillis,fisherShuffle} = require('../assets/functionTools');
 //BEANS ROUTES
 
 
@@ -23,7 +24,7 @@ router.get('/', async (req, res) => {
     //view in json format on this route 
 });
 
-router.post('/order', validateOrdreData, checkProductsExistsInDB, checkUserStatus,totalPrice, (req, res) => {
+router.post('/order', validateOrdreData, checkProductsExistsInDB, checkUserStatus,totalPrice,checkCoupons, (req, res) => {
 
     try {
         const orderDate = new Date();
@@ -35,17 +36,15 @@ router.post('/order', validateOrdreData, checkProductsExistsInDB, checkUserStatu
         const orderNr = orderNumberGenerator(6);
         //generate timestamp using Date API to track the time and calculate the delivery time #--
         const timeStamp = Date.now();
-        //creating order object with structure
-
-        //adding estimated delivery time // 
-
+        //adding estimated delivery time #--
+        //check if there is any coupons,
         let order = {
             orderNr: orderNr,
             userId:req.body.user !== 'GUEST' ? userId : 'GUEST',
+            coupon:req.body.details.coupon,
             totalPrice:req.body.totalPrice,
+            voucherPrice:(req.body.totalPrice * req.body.details.coupon.value/100),
             date: convertTimestamp('date',timeStamp),
-
-
             estimated_delivery: convertTimeToMillis('minutes',1), //the random number here is  range between 5 and 1 minute
             timestamp: timeStamp,
             order:req.body.details.order
@@ -79,18 +78,22 @@ router.get('/order/status/:ordernr',async (req,res)=> {
 
 
     try{
-        const order = await findOrderByOrderNr(orderNr); 
+        const order = await findOrderByOrderNr(orderNr)[0]; 
         if(order.length > 0){
             let setOrder = {
                 orderNr:orderNr,
-                date: convertTimestamp('date',order[0].timestamp),
-                order_placed:convertTimestamp('time',order[0].timestamp),
-                Estimated_Delivery: convertTimestamp('date',order[0].timestamp + order[0].estimated_delivery) + ' , ' + convertTimestamp('time',order[0].timestamp + order[0].estimated_delivery),
+                date: convertTimestamp('date',order.timestamp),
+                order_placed:convertTimestamp('time',order.timestamp),
+                //convertTimestamp() converts time stamps to a readable date or time 
+                Estimated_Delivery: convertTimestamp('date',order.timestamp + order.estimated_delivery) + ' , ' + convertTimestamp('time',order[0].timestamp + order[0].estimated_delivery),
                 //returns status based on the diff between the time now and the time order placed, 
-                order_status : (Date.now() -  (order[0].timestamp + order[0].estimated_delivery)) > 0 ? 'The order deliverd! ' : ' On its way' ,
-                total_price: order[0].totalPrice,
-                user:order[0].user,
-                order:order[0].order
+                order_status : (Date.now() -  (order.timestamp + order.estimated_delivery)) > 0 ? 'The order deliverd! ' : ' On its way' ,
+                total_price: order.totalPrice,
+
+                //if voucherPrice exists it will output a price based on the value of the coupon
+                final_price: !order.voucherPrice ? order.totalPrice.toFixed(2): parseFloat((order.totalPrice - order[0].voucherPrice).toFixed(2)),
+                user:order.user,
+                order:order.order
             }
             res.json(setOrder);
         }else {
@@ -101,5 +104,32 @@ router.get('/order/status/:ordernr',async (req,res)=> {
     }
     
 });
+
+
+router.get('/coupon',(req,res)=> {
+    const yourCoupon = fisherShuffle(orderNumberGenerator(4));
+    const value = Math.floor(Math.random() * 40 + 10) // random value between 10 and 50
+    const expired = Math.floor(Math.random() * 3 + 1); 
+    let coupon = {
+        Coupon:yourCoupon,
+        value:value,
+        timestamp: Date.now(),
+        expireDays:expired,
+        expires: convertTimestamp('date', Date.now() + convertTimeToMillis('day',expired)) // get the expire date by adding the dateOf expiration day to the date coupon generated. 
+    }
+    addCoupon(coupon); 
+    res.json(coupon);
+})
+
+router.get('/checkcoupon/:id' , async (req,res)=> {
+    const coupon = req.params?.id; 
+    const found = await findCoupon(coupon);
+    if(found){
+        res.json(found);
+    }else {
+     res.status(400).json(messages.badrequest);
+    }
+})
+
 module.exports = router; 
 
