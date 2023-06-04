@@ -16,7 +16,7 @@ function checkUserdata(req,res,next){
             res.status(400).json({success:false, message: 'The password length is less then 3 '}); 
         }
        
-    } else  {
+    } else{
         res.status(400).json(messages.badrequest); 
     }
     

@@ -43,7 +43,8 @@ router.post('/order', validateOrdreData, checkProductsExistsInDB, checkUserStatu
             userId:req.body.user !== 'GUEST' ? userId : 'GUEST',
             coupon:req.body.details.coupon,
             totalPrice:req.body.totalPrice,
-            voucherPrice:(req.body.totalPrice * req.body.details.coupon.value/100),
+            discountValue:req.body.details.coupon.value,
+            discountPrice:(req.body.totalPrice * req.body.details.coupon.value/100), 
             date: convertTimestamp('date',timeStamp),
             estimated_delivery: convertTimeToMillis('minutes',1), //the random number here is  range between 5 and 1 minute
             timestamp: timeStamp,
@@ -78,21 +79,24 @@ router.get('/order/status/:ordernr',async (req,res)=> {
 
 
     try{
-        const order = await findOrderByOrderNr(orderNr)[0]; 
+        const order = await findOrderByOrderNr(orderNr); 
         if(order.length > 0){
             let setOrder = {
                 orderNr:orderNr,
-                date: convertTimestamp('date',order.timestamp),
-                order_placed:convertTimestamp('time',order.timestamp),
+                date: convertTimestamp('date',order[0].timestamp),
+                order_placed:convertTimestamp('time',order[0].timestamp),
                 //convertTimestamp() converts time stamps to a readable date or time 
-                Estimated_Delivery: convertTimestamp('date',order.timestamp + order.estimated_delivery) + ' , ' + convertTimestamp('time',order[0].timestamp + order[0].estimated_delivery),
+                Estimated_Delivery: convertTimestamp('date',order[0].timestamp + order[0].estimated_delivery) + ' , ' + convertTimestamp('time',order[0].timestamp + order[0].estimated_delivery),
                 //returns status based on the diff between the time now and the time order placed, 
-                order_status : (Date.now() -  (order.timestamp + order.estimated_delivery)) > 0 ? 'The order deliverd! ' : ' On its way' ,
-                total_price: order.totalPrice,
-                //if voucherPrice exists it will output a price based on the value of the coupon
-                final_price: !order.voucherPrice ? order.totalPrice.toFixed(2): parseFloat((order.totalPrice - order[0].voucherPrice).toFixed(2)),
-                user:order.user,
-                order:order.order
+                order_status : (Date.now() -  (order[0].timestamp + order[0].estimated_delivery)) > 0 ? 'The order deliverd! ' : ' On its way' ,
+                total_price: order[0].totalPrice,
+                //if discountPrice exists it will output a price based on the value of the coupon
+                // final_price: !order[0].discountPrice ? order[0].totalPrice.toFixed(2) : parseFloat((order[0].totalPrice - order[0].discountPrice).toFixed(2)),
+                coupon:order[0].discountValue + '%',
+                discount: order[0].discountPrice + ':-',
+                final_price: order[0].discountPrice && (Date.now() -  (order[0].timestamp + order[0].estimated_delivery)) ? parseFloat((order[0].totalPrice - order[0].discountPrice).toFixed(2)) : parseFloat(order[0].totalPrice.toFixed(2)),
+                userId:order[0].userId,
+                order:order[0].order
             }
             res.json(setOrder);
         }else {

@@ -35,7 +35,7 @@ router.post('/signup',checkUserdata,usernameExistence,async (req,res)=> {
     res.json(user);
 });
 
-router.post('/login',userAuth, async(req,res)=> {
+router.post('/login',checkUserdata,userAuth, async(req,res)=> {
     res.json({success:true, message:"You are logged in!"});
 }); 
 
