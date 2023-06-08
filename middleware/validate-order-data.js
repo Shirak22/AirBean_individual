@@ -1,10 +1,9 @@
 
 const {messages} = require('../errorMessages');
-const {orderNumberGenerator} = require('../assets/functionTools');
+const {numberGenerator} = require('../assets/functionTools');
 const {addUser,findUser,findUserById} = require('../db-functions/user');
-const {addCoupon,findCoupon} = require('../db-functions/coupon');
-
 const {getAllProducts,findProductByName} = require('../db-functions/products'); 
+const jwt = require('jsonwebtoken'); 
 
 
 function validateOrdreData(req,res,next){
@@ -64,19 +63,44 @@ async function checkProductsExistsInDB(req,res,next){
    
 }
 
-async function checkUserStatus(req,res,next){
-    const userIdByUser = req.body?.details?.userId; 
-    const user = await findUserById(userIdByUser); 
+// async function checkUserStatus(req,res,next){
+//     const userIdByUser = req.body?.details?.userId; 
+//     const user = await findUserById(userIdByUser); 
 
-        if(user && user.islogged){
-            req.body.user = user.username;
-            next(); 
-        }else {
-            req.body.user = "GUEST"; 
-            next(); 
+//         if(user && user.islogged){
+//             req.body.user = user.username;
+//             next(); 
+//         }else {
+//             req.body.user = "GUEST"; 
+//             next(); 
+//         }
+async function checkUserStatus(req,res,next){
+    const token = req.headers.authorization?.replace('Bearer ', '');
+
+        if(token){
+            try{
+                const {username} = await jwt.verify(token, 'a1b1c1d1'); 
+                const checkuser = await findUser(username); 
+                    req.user = checkuser;
+                    next(); 
+            
+            
+            }catch {
+                req.user = {userId:'GUEST'}
+                next();
+            }
+        }else  {
+            req.user = {userId:'GUEST'}
+            res.status(400).json({success:false, message:'Please log in first! '}); 
         }
-        //to check if the user exists and is logged in 
-}
+            
+        }
+ 
+
+
+        
+//         //to check if the user exists and is logged in 
+// }
 
 async function totalPrice(req,res,next){
    const orders =  req.body.details.order;
@@ -88,28 +112,6 @@ async function totalPrice(req,res,next){
    next();
 }
 
-async function checkCoupons(req,res,next){
-    const mabyeCoupon = req.body.details?.coupon; 
-    if(!mabyeCoupon){
-        req.body.details.coupon = {};
-        next(); 
-    }else if(mabyeCoupon){
-        const found = await findCoupon(mabyeCoupon); 
-        if(!found){
-            req.body.details.coupon = {}; 
-            next();
-        }else {
-            req.body.details.coupon = {
-                coupon:found.Coupon,
-                expires:found.expires,
-                value:found.value
-            }
-           
-            next();
-        }
-    }else {
-        res.json(messages.badrequest);
-    }
-}
-module.exports = {validateOrdreData,checkProductsExistsInDB,checkUserStatus,totalPrice,checkCoupons};
+
+module.exports = {validateOrdreData,checkProductsExistsInDB,checkUserStatus,totalPrice};
 

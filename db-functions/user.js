@@ -6,6 +6,10 @@ function addUser(user){
     usersDB.insert(user); 
 }
 
+async function find(username){
+    const result = await usersDB.find(username); 
+    return result;
+}
 async function findUser(username){
     const result = await usersDB.findOne({username:username}); 
     return result;
@@ -22,4 +26,4 @@ async function updateStatus(userId,status){
 async function addToUserHistory(userId,order){
     await usersDB.update({userId:userId}, {$push:{userHistory:order}}); 
 }
-module.exports = {addUser,findUser,updateStatus,findUserById,addToUserHistory};
+module.exports = {addUser,findUser,updateStatus,findUserById,addToUserHistory,find};

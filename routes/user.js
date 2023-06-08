@@ -1,10 +1,13 @@
 const {Router} = require('express'); 
 const router = Router();
-const {addUser,findUser} = require('../db-functions/user');
+const jwt = require('jsonwebtoken'); 
+
+const {addUser,findUser,find} = require('../db-functions/user');
 const {hashPassword} = require('../assets/crypting'); 
 
 const {userIdGenerator} = require('../assets/functionTools');
-const {checkUserdata,usernameExistence,userAuth,logOut,userIdCheck}=require('../middleware/user-account')
+const {checkUserdata,usernameExistence,userAuth,userIdCheck,secureRoute}=require('../middleware/user-account');
+const { messages } = require('../errorMessages');
 
 
 
@@ -20,30 +23,31 @@ router.post('/signup',checkUserdata,usernameExistence,async (req,res)=> {
         const userId= userIdGenerator(req.body.username,10); //generating user id based on date and username. 
         //hash the password using bcryptjs
         const password = await hashPassword(req.body.password);
+        //checking if there is no users in the database that means the first user is the admin. 
+
+        const checkAdmin = await find({}); 
             let user = {
                 userId: userId,
                 username:req.body.username.toLowerCase(),
                 password:password,
-                islogged:false,
-                userHistory:[]
+                role: checkAdmin.length !== 0 ? 'user': 'admin'
             }
-
-            
+   
         //save the user in users.db
-        addUser(user);
-        
-    res.json(user);
+        try{
+            addUser(user);
+            res.json(user);
+        }catch {
+            res.status(400).json(messages.badrequest); 
+        }
+    
 });
 
 router.post('/login',checkUserdata,userAuth, async(req,res)=> {
-    res.json({success:true, message:"You are logged in!"});
+            res.status(200).json({success:true, token:req.token, message:'You logged in ! '});
 }); 
 
-router.post('/logout',logOut, (req,res)=> {
-    res.json({success:true, message:"You are logged out!"});
-})
-
-router.post('/history',userIdCheck,(req,res)=> {
+router.get('/history',secureRoute,userIdCheck,(req,res)=> {
     res.sendStatus(200); 
 }); 
 

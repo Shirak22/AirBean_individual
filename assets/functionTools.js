@@ -1,12 +1,13 @@
-function orderNumberGenerator(digits){
+function numberGenerator(digits){
     const availableChars = '1234567890ABCDEFGHIJKLMNOPQR';
-    const dateStamp = Date.now().toString().slice(-4); 
+    const dateStamp = Date.now().toString().slice(-4);
+    const sumString = dateStamp + availableChars; 
     let result = ''; 
     for (let i = 0; i < digits; i++) {
         const randomNum = Math.floor(Math.random() * availableChars.length); 
-        result += availableChars[randomNum];
+        result += sumString[randomNum];
     }
-    return result + dateStamp;
+    return result;
 }
 
 function userIdGenerator(username,digits){
@@ -70,4 +71,4 @@ function convertTimeToMillis(time,value){
     }
 }
 
-module.exports = {orderNumberGenerator,userIdGenerator,convertTimestamp,convertTimeToMillis,fisherShuffle}
+module.exports = {numberGenerator,userIdGenerator,convertTimestamp,convertTimeToMillis,fisherShuffle}

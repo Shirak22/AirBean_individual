@@ -12,16 +12,15 @@ app.use(express.json());
 
 
 const userRoutes = require('./routes/user'); 
-const mainRoutes = require('./routes/main'); 
 const beansRoutes = require('./routes/beans'); 
+const adminRoutes = require('./routes/admin'); 
 
 //all user routes  
 app.use('/api/user', userRoutes);
 app.use('/api/beans', beansRoutes);
 
-//all main routes  
-app.use('/', mainRoutes); 
-
+//admin route
+app.use('/api/admin', adminRoutes);
 
 
 //not found pages 
