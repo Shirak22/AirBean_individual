@@ -28,5 +28,13 @@ async function findProductByName(productName){
     return result ;
 }
 
+async function findProductById(productId){
+    const result = await db.findOne({id:productId}); 
+     return result ;
+ }
 
-module.exports = {writeProductsInDB,getAllProducts,findProductByName};
+ 
+function addProduct(product){
+        db.insert(product); 
+}
+module.exports = {addProduct,writeProductsInDB,getAllProducts,findProductByName,findProductById};

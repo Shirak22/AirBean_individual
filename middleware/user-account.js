@@ -3,7 +3,6 @@ const {addUser,findUser,updateStatus,findUserById} = require('../db-functions/us
 const {addOrder,findOrderByOrderNr,findOrderByuserId} = require('../db-functions/orders');
 const {numberGenerator,convertTimestamp,convertTimeToMillis} = require('../assets/functionTools');
 const jwt = require('jsonwebtoken'); 
-
 const {hashedCheck,hashPassword} = require('../assets/crypting'); 
 
 function checkUserdata(req,res,next){
@@ -94,17 +93,16 @@ async function adminCheck(req, res, next) {
 
 }
    
-
-
 async function userIdCheck(req,res,next){
-    const user = req.user; 
-    const userId = req.user?.userId;
+    const username = req.user.username; 
+    
+    const user= await findUser(username)// req.user?.userId;
         let response = {
             success:false,
             message:'You should log in to contiue!  '
         }
-            if(userId){
-                const orders = await findOrderByuserId(userId);
+            if(user.userId){
+                const orders = await findOrderByuserId(user.userId);
                 orders.map(order => {
                     let deliveryTime = order.estimated_delivery; 
                     order.estimated_delivery = convertTimestamp('date',order.timestamp + deliveryTime) + ',' + convertTimestamp('time',order.timestamp + deliveryTime);
@@ -116,7 +114,7 @@ async function userIdCheck(req,res,next){
                 })
                  response = {
                     success:true,
-                    user:user.username,
+                    user:username,
                     all_orders:orders
                 }
                 res.json(response);
