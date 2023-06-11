@@ -3,7 +3,7 @@ const router = Router();
 const {messages} = require('../errorMessages');
 const postss = require('../json/posts.json');
 const {writeProductsInDB,getAllProducts} = require('../db-functions/products'); 
-const {addOrder,findOrderByOrderNr} = require('../db-functions/orders');
+const {addOrder,findOrderByOrderNr,addPromotionalOffer,findByOfferProduct,findOfferByProductName} = require('../db-functions/orders');
 const {addToUserHistory} = require('../db-functions/user');
 const {validateOrdreData,checkProductsExistsInDB,checkUserStatus,totalPrice} = require('../middleware/validate-order-data');
 const {secureRoute}=require('../middleware/user-account'); 
@@ -31,7 +31,7 @@ router.get('/about',secureRoute, async (req,res)=> {
     res.json({success:true,username:req.user?.username, post:posts});
 })
 
-router.post('/order', validateOrdreData, checkProductsExistsInDB,checkUserStatus,totalPrice, (req, res) => {
+router.post('/order', validateOrdreData, checkProductsExistsInDB,checkUserStatus,totalPrice, async (req, res) => {
 
         const orderDate = new Date();
         const userId = req.user?.userId;
@@ -44,6 +44,8 @@ router.post('/order', validateOrdreData, checkProductsExistsInDB,checkUserStatus
         const timeStamp = Date.now();
         //adding estimated delivery time #--
         //check if there is any coupons,
+
+
         let order = {
             orderNr: orderNr,
             userId:userId,

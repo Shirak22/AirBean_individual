@@ -3,8 +3,10 @@ const router = Router();
 const {messages} = require('../errorMessages');
 const {secureRoute,adminCheck}=require('../middleware/user-account'); 
 const {validateData,checkProductExistence}=require('../middleware/products-validation'); 
+const {addOffer,validateOffer}=require('../middleware/validate-order-data'); 
 const {numberGenerator,convertTimestamp} = require('../assets/functionTools');
 const {addProduct,findProductByName,findProductById,updateProduct,removeProduct} = require('../db-functions/products'); 
+const {addOrder,findOrderByOrderNr,addPromotionalOffer} = require('../db-functions/orders');
 
 
 router.get('/',secureRoute, (req,res)=> {
@@ -69,8 +71,8 @@ router.get('/removeproduct/:productId', secureRoute, adminCheck, async (req, res
     }
 })
 
-
-
-
+router.post('/addPromotionalOffer',secureRoute,adminCheck,validateOffer,addOffer,async (req,res)=> {
+    // res.json({message:'Pass final destination!'});
+}); 
 module.exports = router; 
 

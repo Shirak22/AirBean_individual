@@ -1,8 +1,11 @@
 
 const {messages} = require('../errorMessages');
 const {findUser} = require('../db-functions/user');
-const {getAllProducts} = require('../db-functions/products'); 
+const {getAllProducts,findProductById} = require('../db-functions/products');
+const {addOrder,findOrderByOrderNr,addPromotionalOffer,findByOfferProduct,findOfferByProductName} = require('../db-functions/orders');
+
 const jwt = require('jsonwebtoken'); 
+const { numberGenerator, convertTimestamp, convertTimeToMillis } = require('../assets/functionTools');
 
 
 function validateOrdreData(req,res,next){
@@ -103,14 +106,107 @@ async function checkUserStatus(req,res,next){
 
 async function totalPrice(req,res,next){
    const orders =  req.body.details.order;
-   let totalPrice = 0;  
-   orders && orders.forEach(order => {
+   
+   let totalPrice = 0;
+   orders && orders.forEach(async order => {
+    //if there is any discount on any product implement it 
+    //try to find it in db and take take the value 
+   
+   
+    // if(foundOffer.length > 0){
+    //     let ProductToOffer ={} ;
+    //     foundOffer.forEach(offer => {
+    //         if(Date.now() < offer.expire_timestamp){
+    //             ProductToOffer = offer; 
+    //         }
+    //     });
+    //     console.log(ProductToOffer);
+    //     totalPrice += parseInt(order.price - parseFloat(ProductToOffer.value)); 
+
+    // }else {
         totalPrice += parseInt(order.price); 
+    // }
+
+        
    });
+
    req.body.totalPrice = totalPrice; 
+   console.log(totalPrice);
    next();
 }
 
 
-module.exports = {validateOrdreData,checkProductsExistsInDB,checkUserStatus,totalPrice};
+
+
+function validateOffer(req,res,next){
+    const offer =  req.body?.offer;
+        if(offer){
+            const productId = req.body.offer?.productId; 
+            const value = req.body.offer?.value; 
+            const expires= req.body.offer?.expires; 
+
+                if(productId && value && expires){
+                    next(); 
+                }else {
+                    res.status(400).json({success:false,message:'Please make sure you have right input! '})
+                }
+        }else {
+            res.status(400).json({success:false,message:'Please make sure you have right input! '})
+
+        }
+}
+
+async function addOffer(req,res,next){
+    const {productId,value,expires} = req.body.offer; 
+    //expire time is string  '2,days' => 2 days  ||  '2,hours' => 2 hours
+    const splitExpires = expires.split(','); 
+
+    const foundOffer = await findByOfferProduct(productId);
+    const foundProduct = await findProductById(productId); 
+
+
+    if(foundProduct){
+        let newOfferData={
+            id:numberGenerator(10),
+            product:foundProduct.title,
+            productId:foundProduct.id,
+            value:value,
+            createdAt:convertTimestamp('date',Date.now()) + ',' + convertTimestamp('time',Date.now()),
+            expires:expires,
+            expire_date: convertTimestamp('date',(Date.now() + convertTimeToMillis(splitExpires[1] === 'days' ? 'day':'hours',parseInt(splitExpires[0])))),
+            expire_time: convertTimestamp('time',(Date.now() + convertTimeToMillis(splitExpires[1] === 'days' ? 'day':'hours',parseInt(splitExpires[0])))),
+            timestamp:Date.now(),
+            
+            //expired date is the the time stamp now in millis add to the expires date from the user converted to millis too 
+            expire_timestamp : Date.now() + convertTimeToMillis(splitExpires[1] === 'd' ? 'day':'hours',parseInt(splitExpires[0]))
+        }
+    
+        if(foundOffer.length > 0){
+            foundOffer.forEach( async (offer)=> {
+               //if(expired) {add offer } else {res.json({message:"There is active offer on this product! "})} 
+    
+               //check if the offer expired! 
+               if(Date.now() > offer.expire_timestamp){
+                await addPromotionalOffer(newOfferData);
+                  res.json(newOfferData); 
+               }else {
+                    res.json({success:false, message:'There is an active offer on the same product! '})
+               }
+            });
+        }else {
+           //add offer next(); 
+           await addPromotionalOffer(newOfferData);
+           res.json(newOfferData); 
+        }
+    }else {
+        res.status(404).json({success:false, message:'No such product! '});
+
+    }   
+
+    
+  
+        
+}
+
+module.exports = {addOffer,validateOffer,validateOrdreData,checkProductsExistsInDB,checkUserStatus,totalPrice};
 
