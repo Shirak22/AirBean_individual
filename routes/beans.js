@@ -4,10 +4,10 @@ const {messages} = require('../errorMessages');
 const postss = require('../json/posts.json');
 const {writeProductsInDB,getAllProducts} = require('../db-functions/products'); 
 const {addOrder,findOrderByOrderNr} = require('../db-functions/orders');
-const {addUser,findUser,findUserById,addToUserHistory} = require('../db-functions/user');
+const {addToUserHistory} = require('../db-functions/user');
 const {validateOrdreData,checkProductsExistsInDB,checkUserStatus,totalPrice} = require('../middleware/validate-order-data');
 const {secureRoute}=require('../middleware/user-account'); 
-const {numberGenerator,convertTimestamp,convertTimeToMillis,fisherShuffle} = require('../assets/functionTools');
+const {numberGenerator,convertTimestamp,convertTimeToMillis} = require('../assets/functionTools');
 //BEANS ROUTES
 
 

@@ -1,13 +1,12 @@
 const {Router} = require('express'); 
 const router = Router();
-const jwt = require('jsonwebtoken'); 
+const { messages } = require('../errorMessages');
 
-const {addUser,findUser,find} = require('../db-functions/user');
+const {addUser,find} = require('../db-functions/user');
 const {hashPassword} = require('../assets/crypting'); 
 
 const {userIdGenerator} = require('../assets/functionTools');
 const {checkUserdata,usernameExistence,userAuth,userIdCheck,secureRoute}=require('../middleware/user-account');
-const { messages } = require('../errorMessages');
 
 
 

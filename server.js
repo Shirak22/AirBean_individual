@@ -1,7 +1,6 @@
 const express = require('express'); 
 const app = express();
 const port = 3000; 
-
 const {messages} = require('./errorMessages');
 
 app.use(express.json()); 

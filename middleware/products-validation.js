@@ -2,10 +2,7 @@ const {messages} = require('../errorMessages');
 const {addUser,findUser,updateStatus,findUserById} = require('../db-functions/user');
 const {addOrder,findOrderByOrderNr,findOrderByuserId} = require('../db-functions/orders');
 const {numberGenerator,convertTimestamp,convertTimeToMillis} = require('../assets/functionTools');
-const {writeProductsInDB,getAllProducts,findProductByName} = require('../db-functions/products'); 
-
-const jwt = require('jsonwebtoken'); 
-const {hashedCheck,hashPassword} = require('../assets/crypting'); 
+const {findProductByName} = require('../db-functions/products');
 
 
 

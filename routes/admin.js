@@ -3,9 +3,8 @@ const router = Router();
 const {messages} = require('../errorMessages');
 const {secureRoute,adminCheck}=require('../middleware/user-account'); 
 const {validateData,checkProductExistence}=require('../middleware/products-validation'); 
-const {numberGenerator,convertTimestamp,convertTimeToMillis,fisherShuffle} = require('../assets/functionTools');
-const {addProduct,writeProductsInDB,getAllProducts,findProductByName,findProductById,updateProduct,removeProduct} = require('../db-functions/products'); 
-const {addUser,findUser,findUserById,addToUserHistory} = require('../db-functions/user');
+const {numberGenerator,convertTimestamp} = require('../assets/functionTools');
+const {addProduct,findProductByName,findProductById,updateProduct,removeProduct} = require('../db-functions/products'); 
 
 
 router.get('/',secureRoute, (req,res)=> {

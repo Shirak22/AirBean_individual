@@ -1,8 +1,7 @@
 
 const {messages} = require('../errorMessages');
-const {numberGenerator} = require('../assets/functionTools');
-const {addUser,findUser,findUserById} = require('../db-functions/user');
-const {getAllProducts,findProductByName} = require('../db-functions/products'); 
+const {findUser} = require('../db-functions/user');
+const {getAllProducts} = require('../db-functions/products'); 
 const jwt = require('jsonwebtoken'); 
 
 

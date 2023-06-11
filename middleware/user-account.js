@@ -1,9 +1,9 @@
 const {messages} = require('../errorMessages');
-const {addUser,findUser,updateStatus,findUserById} = require('../db-functions/user');
-const {addOrder,findOrderByOrderNr,findOrderByuserId} = require('../db-functions/orders');
-const {numberGenerator,convertTimestamp,convertTimeToMillis} = require('../assets/functionTools');
+const {findUser} = require('../db-functions/user');
+const {findOrderByuserId} = require('../db-functions/orders');
+const {convertTimestamp} = require('../assets/functionTools');
+const {hashedCheck} = require('../assets/crypting'); 
 const jwt = require('jsonwebtoken'); 
-const {hashedCheck,hashPassword} = require('../assets/crypting'); 
 
 function checkUserdata(req,res,next){
     const body = req.body;
