@@ -107,7 +107,7 @@ async function checkUserStatus(req,res,next){
 async function totalPrice(req, res, next) {
     let orders = req.body.details.order;
     let totalPrice = 0;
-  
+    let discount = [];
     const ordersAfterOffer = await Promise.all(
       orders.map(async (order) => {
         const foundOffer = await findOfferByProductName(order.name);
@@ -115,7 +115,10 @@ async function totalPrice(req, res, next) {
         if (foundOffer.length > 0) {
           foundOffer.forEach((offer) => {
             if (Date.now() < offer.expire_timestamp) {
+                
               let value = offer.value; // '10'  or '10%' 
+              
+              discount.push({product:offer.product, value:offer.value});
                 if(value.includes('%')){
                     const index = value.indexOf('%'); 
                     let newValue = parseFloat(value.slice(0,index))/100; 
@@ -143,7 +146,7 @@ async function totalPrice(req, res, next) {
     });
   
     req.body.totalPrice = totalPrice;
-    console.log(totalPrice);
+    req.body.discount = discount;
     next();
   }
 

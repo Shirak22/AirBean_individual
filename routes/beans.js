@@ -50,6 +50,7 @@ router.post('/order', validateOrdreData, checkProductsExistsInDB,checkUserStatus
             orderNr: orderNr,
             userId:userId,
             totalPrice:req.body.totalPrice,
+            discount:req.body.discount,
             date: convertTimestamp('date',timeStamp),
             estimated_delivery: convertTimeToMillis('minutes',1), //the random number here is  range between 5 and 1 minute
             timestamp: timeStamp,
@@ -88,8 +89,8 @@ router.get('/order/status/:ordernr',async (req,res)=> {
                 Estimated_Delivery: convertTimestamp('date',order[0].timestamp + order[0].estimated_delivery) + ' , ' + convertTimestamp('time',order[0].timestamp + order[0].estimated_delivery),
                 //returns status based on the diff between the time now and the time order placed, 
                 order_status : (Date.now() -  (order[0].timestamp + order[0].estimated_delivery)) > 0 ? 'The order deliverd! ' : ' On its way' ,
-                total_price: order[0].totalPrice,
-                final_price: order[0].discountPrice && (Date.now() -  (order[0].timestamp + order[0].estimated_delivery)) ? parseFloat((order[0].totalPrice - order[0].discountPrice).toFixed(2)) : parseFloat(order[0].totalPrice.toFixed(2)),
+                discount: order[0].discount,
+                final_price: order[0].totalPrice,
                 userId:order[0].userId,
                 order:order[0].order
             }
