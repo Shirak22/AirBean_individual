@@ -33,8 +33,13 @@ async function findProductById(productId){
      return result ;
  }
 
- 
+async function removeProduct(productId){
+    db.remove({id:productId}, {})
+}
 function addProduct(product){
         db.insert(product); 
 }
-module.exports = {addProduct,writeProductsInDB,getAllProducts,findProductByName,findProductById};
+async function updateProduct(productId, newData){
+    await db.update({id:productId}, {$set:newData}); 
+}
+module.exports = {addProduct,writeProductsInDB,getAllProducts,findProductByName,findProductById,updateProduct,removeProduct};

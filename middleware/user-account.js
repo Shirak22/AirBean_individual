@@ -83,12 +83,15 @@ async function secureRoute(req,res,next){
 async function adminCheck(req, res, next) {
     const username = await req.user?.username;
     const user = await findUser(username); 
-    if (user?.role === 'admin') {
+    if (user.role === 'admin') {
         console.log(user.role);
         next();
-    } else {
+    } else if (user.role === 'user') {
         console.log(user.role);
-        res.status(400).json(Object.assign(messages.badrequest,{user_message:'You don\'t have permission to access!  you need to have {role:admin} to access!   '}));
+        res.status(401).json(Object.assign(messages.badrequest,{user_message:'You don\'t have permission to access! you need to have {role:admin} to access!'}));
+    }else{
+        console.log(user.role);
+        res.status(401).json(messages.badrequest);
     }
 
 }
