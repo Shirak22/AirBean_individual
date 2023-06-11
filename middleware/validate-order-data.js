@@ -104,37 +104,48 @@ async function checkUserStatus(req,res,next){
 //         //to check if the user exists and is logged in 
 // }
 
-async function totalPrice(req,res,next){
-   const orders =  req.body.details.order;
-   
-   let totalPrice = 0;
-   orders && orders.forEach(async order => {
-    //if there is any discount on any product implement it 
-    //try to find it in db and take take the value 
-   
-   
-    // if(foundOffer.length > 0){
-    //     let ProductToOffer ={} ;
-    //     foundOffer.forEach(offer => {
-    //         if(Date.now() < offer.expire_timestamp){
-    //             ProductToOffer = offer; 
-    //         }
-    //     });
-    //     console.log(ProductToOffer);
-    //     totalPrice += parseInt(order.price - parseFloat(ProductToOffer.value)); 
-
-    // }else {
-        totalPrice += parseInt(order.price); 
-    // }
-
-        
-   });
-
-   req.body.totalPrice = totalPrice; 
-   console.log(totalPrice);
-   next();
-}
-
+async function totalPrice(req, res, next) {
+    let orders = req.body.details.order;
+    let totalPrice = 0;
+  
+    const ordersAfterOffer = await Promise.all(
+      orders.map(async (order) => {
+        const foundOffer = await findOfferByProductName(order.name);
+        let priceAfterDiscount = order.price;
+        if (foundOffer.length > 0) {
+          foundOffer.forEach((offer) => {
+            if (Date.now() < offer.expire_timestamp) {
+              let value = offer.value; // '10'  or '10%' 
+                if(value.includes('%')){
+                    const index = value.indexOf('%'); 
+                    let newValue = parseFloat(value.slice(0,index))/100; 
+                    priceAfterDiscount = order.price - (order.price * newValue );
+                    console.log(newValue);
+                }else if(order.price > parseInt(value)){
+                    priceAfterDiscount = order.price - parseInt(value);
+                }else {
+                    priceAfterDiscount = 0
+                }
+                
+            }
+          });
+        }
+  
+        return {
+          name: order.name,
+          price: priceAfterDiscount,
+        };
+      })
+    );
+  
+    ordersAfterOffer.forEach((order) => {
+      totalPrice += parseInt(order.price);
+    });
+  
+    req.body.totalPrice = totalPrice;
+    console.log(totalPrice);
+    next();
+  }
 
 
 
@@ -210,3 +221,34 @@ async function addOffer(req,res,next){
 
 module.exports = {addOffer,validateOffer,validateOrdreData,checkProductsExistsInDB,checkUserStatus,totalPrice};
 
+// async function totalPrice(req, res, next) {
+//     let orders = req.body.details.order;
+//     let totalPrice = 0;
+  
+//     const ordersAfterOffer = await Promise.all(
+//       orders.map(async (order) => {
+//         const foundOffer = await findOfferByProductName(order.name);
+//         let priceAfterDiscount = order.price;
+//         if (foundOffer.length > 0) {
+//           foundOffer.forEach((offer) => {
+//             if (Date.now() < offer.expire_timestamp) {
+//               priceAfterDiscount = order.price - parseInt(offer.value);
+//             }
+//           });
+//         }
+  
+//         return {
+//           name: order.name,
+//           price: priceAfterDiscount,
+//         };
+//       })
+//     );
+  
+//     ordersAfterOffer.forEach((order) => {
+//       totalPrice += parseInt(order.price);
+//     });
+  
+//     req.body.totalPrice = totalPrice;
+//     console.log(totalPrice);
+//     next();
+//   }
