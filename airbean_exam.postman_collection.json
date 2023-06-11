@@ -273,6 +273,41 @@
 			"response": []
 		},
 		{
+			"name": "admin/addPromotionalOffer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNoaXJhayIsImlhdCI6MTY4NjUwOTgwNywiZXhwIjoxNjg2NTEzNDA3fQ.NwUJJNvkC1mE7I9-BaAldxAgPZLMAmlVZl0MlS7R0pI",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"offer\":{\r\n        \"product\":\"Bryggkaffe\",\r\n        \"value\": \"10%\",\r\n        \"expires\":\"2d\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/admin/addPromotionalOffer",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"admin",
+						"addPromotionalOffer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "admin/editproduct",
 			"request": {
 				"method": "POST",
