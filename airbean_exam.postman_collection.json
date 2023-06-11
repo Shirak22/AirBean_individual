@@ -1,0 +1,338 @@
+{
+	"info": {
+		"_postman_id": "8fc02163-4d8e-442d-8a13-b33e0cb980ca",
+		"name": "airbean_exam",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27864857"
+	},
+	"item": [
+		{
+			"name": "Menu",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNpbGRhIiwiaWF0IjoxNjg2MTg0MDU5LCJleHAiOjE2ODYxODQxMTl9.EopgynSZ0zMBQ1pBkSTkxaE76MJqKjoyOrNVfcHpS4Y",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3000/api/beans/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"beans",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Make order",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzIdf1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNoaXJhayIsImlhdCI6MTY4NjIxMjc5MSwiZXhwIjoxNjg2MjEyOTcxfQ.hDO_RnZYyVe8A5T1Jf4-4sqUrq_ENxVKRjHkb_CvIfU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\r\n        \r\n    \"details\": {\r\n        \"order\":[\r\n                {\r\n            \"name\": \"Bryggkaffe\",\r\n            \"price\": 39\r\n        },\r\n                {\r\n            \"name\": \"Bryggkaffe\",\r\n            \"price\": 39\r\n        }\r\n            ]\r\n                \r\n    }\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/beans/order",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"beans",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "  { \"username\":\"silda\",\"password\":\"123456\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/user/signup",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Log in",
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "username",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "Bearer",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "  { \"username\":\"shirak\",\"password\":\"123456\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/user/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Track order",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNpbGRhIiwiaWF0IjoxNjg2MTcxMjYxLCJleHAiOjE2ODYxNzEzMjF9.iRKypuzhsMmSSefyWDrPMgho7BNsFgxh1HReCYMJXv0",
+						"description": "Token",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3000/api/beans/order/status/I2RAH19347",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"beans",
+						"order",
+						"status",
+						"I2RAH19347"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User History",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNpbGRhIiwiaWF0IjoxNjg2MjExODAwLCJleHAiOjE2ODYyMTE5ODB9.Vfuu_42vXXJFWnKH1IgHpC6sAm5U-Oha31oteMJGmTM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/user/history",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"history"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin/addproduct",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNoaXJhayIsImlhdCI6MTY4NjM5MDk3NSwiZXhwIjoxNjg2Mzk0NTc1fQ.-afk_RgvPEw32wjgl9bQXZIXMdaKq1SvYC38GELR1c0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"product\": {\r\n        \"name\": \"Bryggkaffe\",\r\n        \"description\": \"Amazing coffee with lakrits\",\r\n        \"price\": 49\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/admin/addproduct",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"admin",
+						"addproduct"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin/editproduct",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNoaXJhayIsImlhdCI6MTY4NjM5MDk3NSwiZXhwIjoxNjg2Mzk0NTc1fQ.-afk_RgvPEw32wjgl9bQXZIXMdaKq1SvYC38GELR1c0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"product\": {\r\n        \"name\": \"Bryggkaffe\",\r\n        \"description\": \"Amazing coffee with lakrits\",\r\n        \"price\": 49\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/admin/addproduct",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"admin",
+						"addproduct"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin/removeproduct",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNoaXJhayIsImlhdCI6MTY4NjQ4Nzg0MiwiZXhwIjoxNjg2NDkxNDQyfQ.DzWkeKAuNA9uGJ7fkvBReuS83ZEER-CXm725cocxl4s",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3000/api/admin/removeproduct/coffee-vxig26my4y",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"admin",
+						"removeproduct",
+						"coffee-vxig26my4y"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
