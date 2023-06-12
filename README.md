@@ -16,6 +16,22 @@ $ npm start
 ```
 
 ## How to use
+  ### Postman:
+	To get started with our API using Postman, simply import the provided Postman collection file into the app. This will give you 
+	access to all the available API endpoints, preconfigured for your convenience!
+
+ ### Database setup:
+	Before diving into the API, make sure to populate your database with available products. To do this, navigate to the following route: localhost:3000/api/beans/. 
+ 
+ ### Login and authentication: 
+	 When you log in, you'll receive an authorization token. To stay logged in and access protected routes, make sure to add the token to the "Authorization" header of your requests.
+
+ ### User roles: 
+	Upon signup, the first user in the database will be granted an "Admin" role, allowing them to create, modify, and remove products. All other users will have a "User" role, which allows them to view their order history.
+
+ ### Promotional offers:
+	 When creating or updating a promotional offer, use a string value that represents either a fixed discount (e.g., '10') or a percentage discount (e.g., '10%')
+	
 
 ### Api routes
 1. Go to `localhost:3000/api/beans` to fill database with all the available products. 
@@ -39,23 +55,15 @@ Go to `localhost:3000/api/beans/order` to make order .
 POST method 
 the request should be .. 
 ```JSON
-    {
-        
+    {        
     "details": {
-            "userId":"631QQJ64F3",
-            "coupon":"0P1699DL",
         "order":[
-                {
-            "name": "Bryggkaffe",
-            "price": 39
-        },
-                {
-            "name": "Bryggkaffe",
-            "price": 39
-        }
-            ]
-                
-    }
+            {
+			"name": "Kaffe Latte",
+			"price": 54
+       		}
+        ]	       
+    }	
     }
 ```
 
@@ -82,10 +90,13 @@ the response will be..
 	"order_placed": "18:11:39",
 	"Estimated_Delivery": "2023-06-04 , 18:12:39",
 	"order_status": " On its way",
-	"total_price": 78,
-	"coupon": "30%",
-	"discount": "23.4:-",
-	"final_price": 54.6,
+	"discount": [
+          {
+            "product": "Bryggkaffe",
+            "value": "30"
+          }
+        ],
+	"final_price": 18,
 	"userId": "GUEST",
 	"order": [
 		{
