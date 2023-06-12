@@ -34,7 +34,7 @@ $ npm start
 	
 
 ### Api routes
-1. Go to `localhost:3000/api/beans` to fill database with all the available products. 
+1. Go to the menu `localhost:3000/api/beans` to fill database with all the available products. 
 GET method 
 the response will be.. 
 ```JSON
@@ -122,11 +122,10 @@ the request should be ..
 the response will be.. 
 ```JSON
 {
-	"userId": "631QQJ64F3",
-	"username": "name",
-	"password": "$2b$10$JcSpPD91P.acdMWgFCKYQeAKKaDsMHgUiYib9dWZPiUvaKXAbikGC",
-	"islogged": false,
-	"userHistory": []
+    "userId": "45G9729LA5",
+    "username": "name",
+    "password": "$2a$10$qiu0LlDa0txb8hvdo3pLs.lpXNzhkG8z6yRumFREuSQgCdHcborh6",
+    "role": "admin"
 }
 ```
 
@@ -140,84 +139,146 @@ the request should be ..
 the response will be.. 
 ```JSON
 {
-	"success": true,
-	"message": "You are logged in!"
+    "success": true,
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNoaXJhayIsImlhdCI6MTY4NjUyNTQxNCwiZXhwIjoxNjg2NTI5MDE0fQ.UoaoqDrvyCRHdRgHZuquOTns1sC1m-5f7LsgwFb_g04",
+    "message": "You logged in ! "
 }
 ```
-
------- 
-Go to `localhost:3000/api/user/logout` to log out   . 
-POST method 
-the request should be .. 
-```JSON
-  {
-	"username": "name"
-   }
-```
-the response will be.. 
-```JSON
-{
-	"success": true,
-	"message": "You are logged out!"
-}
-```
-
 ------ 
 Go to `localhost:3000/api/user/history` to see order history for logged users   . 
+GET method 
+the request should contain valid token in headers to view history 
+
+the response will be.. 
+```JSON
+{
+    "success": true,
+    "user": "shirak",
+    "all_orders": [
+        {
+            "orderNr": "483307CM4E",
+            "totalPrice": 138,
+            "discount": [
+                {
+                    "product": "Mango",
+                    "value": "10%"
+                }
+            ],
+            "date": "2023-06-12",
+            "estimated_delivery": "2023-06-12,01:21:44",
+            "order": [
+                {
+                    "name": "Bryggkaffe",
+                    "price": 39
+                },
+                {
+                    "name": "Mango",
+                    "price": 110
+                }
+            ],
+            "order_status": "The order deliverd! "
+        }
+    ]
+}
+```
+------ 
+Go to `localhost:3000/api/admin/addproduct` to add new products . 
 POST method 
 the request should be .. 
 ```JSON
   {
-	"userId":"631QQJ64F3"
-   }
+    "product": {
+        "name": "Mango",
+        "description": "Coffe and donky milk",
+        "price": 110
+    }
+}
 ```
 the response will be.. 
 ```JSON
 {
-	"success": true,
-	"user": "shirak",
-	"all_orders": [
-		{
-			"orderNr": "4RJKDJ3394",
-			"coupon": {},
-			"totalPrice": 78,
-			"discountPrice": null,
-			"date": "2023-06-04",
-			"estimated_delivery": "2023-06-04,18:08:23",
-			"order": [
-				{
-					"name": "Bryggkaffe",
-					"price": 39
-				},
-				{
-					"name": "Bryggkaffe",
-					"price": 39
-				}
-			],
-			"order_status": "The order deliverd! "
-		}
-	]
+    "success": true,
+    "message": "Mango has been add successfuly"
 }
 ```
-
 ------ 
-Go to `localhost:3000/api/beans/coupon` to generate discount coupon. 
+Go to `localhost:3000/api/admin/addPromotionalOffer` to add discounts . 
+POST method 
+the request should be .. 
+```JSON
+ {
+    "offer":{
+        "productId":"coffee-0lp6ter3bh",
+        "value": "44",
+        "expires":"2,hours"  // expiration time it takes (hours and days ) but you it must contain ','
+    }
+}
+```
+the response will be.. 
+```JSON
+{
+    "id": "G45BN974A3",
+    "product": "Kaffe Latte",
+    "productId": "coffee-0lp6ter3bh",
+    "value": "44",
+    "createdAt": "2023-06-12,01:25:13",
+    "expires": "2,hours",
+    "expire_date": "2023-06-12",
+    "expire_time": "03:25:13",
+    "timestamp": 1686525913201,
+    "expire_timestamp": 1686533113201
+}
+```
+------ 
+Go to `localhost:3000/api/admin/editproduct/{productId}` to edit existing product . 
+POST method 
+the request should be .. 
+```JSON
+ {
+    "product": {
+        "name": "Monaco",
+        "description": "Made in Sweden",
+        "price": 39
+    }
+}
+```
+the response will be.. 
+```JSON
+{
+    "success": true,
+    "message": "Monaco has been edited successfuly",
+    "product": {
+        "id": "coffee-vxig26my4y",
+        "title": "Monaco",
+        "desc": "Made in Sweden",
+        "price": 39,
+        "createdAt": "No data", // 'No data ' if the product is original in database, 
+        "modifiedAt": "2023-06-12,01:23:49",
+        "timestamp": 1686525829300
+    }
+}
+```
+------ 
+Go to `localhost:3000/api/admin/removeproduct/{productId}` to edit existing product . 
 GET method 
-
+the request should contain valid token
 the response will be.. 
 ```JSON
 {
-	"Coupon": "0P1699DL",
-	"value": 30,
-	"timestamp": 1685894001700,
-	"expireDays": 1,
-	"expires": "2023-06-05"
+    "success": true,
+    "message": "Monaco has been edited successfuly",
+    "product": {
+        "id": "coffee-vxig26my4y",
+        "title": "Monaco",
+        "desc": "Made in Sweden",
+        "price": 39,
+        "createdAt": "No data", // 'No data ' if the product is original in database, 
+        "modifiedAt": "2023-06-12,01:23:49",
+        "timestamp": 1686525829300
+    }
 }
 ```
-
 ------ 
-
-
 #### mabye you want to see more projects 
 Codepen , visit [here](https://codepen.io/shirakserop).
 
