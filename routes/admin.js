@@ -30,7 +30,7 @@ router.post('/addproduct',secureRoute,validateData,adminCheck,checkProductExiste
     res.status(200).json({success:true,message: product.title + ' has been add successfuly'});
 })
 
-router.post('/editproduct/:productId', secureRoute, validateData, adminCheck, async (req, res) => {
+router.put('/editproduct/:productId', secureRoute, validateData, adminCheck, async (req, res) => {
     const productId = req.params?.productId;
     const userRequest = req.body.product;
     const found = await findProductById(productId);
@@ -60,7 +60,7 @@ router.post('/editproduct/:productId', secureRoute, validateData, adminCheck, as
 
 });
 
-router.get('/removeproduct/:productId', secureRoute, adminCheck, async (req, res) => {
+router.delete('/removeproduct/:productId', secureRoute, adminCheck, async (req, res) => {
     const productId = req.params?.productId;
     const found = await findProductById(productId);
     if(found){

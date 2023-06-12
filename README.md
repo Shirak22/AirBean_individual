@@ -235,7 +235,7 @@ the response will be..
 ```
 ------ 
 Go to `localhost:3000/api/admin/editproduct/{productId}` to edit existing product . 
-POST method 
+PUT method 
 the request should be .. 
 ```JSON
  {
@@ -264,7 +264,7 @@ the response will be..
 ```
 ------ 
 Go to `localhost:3000/api/admin/removeproduct/{productId}` to edit existing product . 
-GET method 
+delete method 
 the request should contain valid token
 the response will be.. 
 ```JSON
