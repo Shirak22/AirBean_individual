@@ -2,7 +2,7 @@
 const {messages} = require('../errorMessages');
 const {findUser} = require('../db-functions/user');
 const {getAllProducts,findProductById} = require('../db-functions/products');
-const {addOrder,findOrderByOrderNr,addPromotionalOffer,findByOfferProduct,findOfferByProductName} = require('../db-functions/orders');
+const {addPromotionalOffer,findByOfferProduct,findOfferByProductName} = require('../db-functions/orders');
 
 const jwt = require('jsonwebtoken'); 
 const { numberGenerator, convertTimestamp, convertTimeToMillis } = require('../assets/functionTools');
@@ -65,17 +65,7 @@ async function checkProductsExistsInDB(req,res,next){
    
 }
 
-// async function checkUserStatus(req,res,next){
-//     const userIdByUser = req.body?.details?.userId; 
-//     const user = await findUserById(userIdByUser); 
 
-//         if(user && user.islogged){
-//             req.body.user = user.username;
-//             next(); 
-//         }else {
-//             req.body.user = "GUEST"; 
-//             next(); 
-//         }
 async function checkUserStatus(req,res,next){
     const token = req.headers.authorization?.replace('Bearer ', '');
 
@@ -108,17 +98,25 @@ async function totalPrice(req, res, next) {
     let orders = req.body.details.order;
     let totalPrice = 0;
     let discount = [];
+    //waiting all the promises to get values 
     const ordersAfterOffer = await Promise.all(
+
+        //making new array of orders with new prices if offer exists and its not expired 
       orders.map(async (order) => {
+
         const foundOffer = await findOfferByProductName(order.name);
         let priceAfterDiscount = order.price;
+        //if there is any offers of a product name that requested by the user 
         if (foundOffer.length > 0) {
+            //if any offers > looping through the offers to filter them by expiration time 
           foundOffer.forEach((offer) => {
+                //if the expire time still bigger the offer is active else it is expired! 
             if (Date.now() < offer.expire_timestamp) {
                 
               let value = offer.value; // '10'  or '10%' 
-              
+              //pushing the product on sale and the value of the offer 
               discount.push({product:offer.product, value:offer.value});
+              //calculating the discounts 
                 if(value.includes('%')){
                     const index = value.indexOf('%'); 
                     let newValue = parseFloat(value.slice(0,index))/100; 
@@ -223,35 +221,3 @@ async function addOffer(req,res,next){
 }
 
 module.exports = {addOffer,validateOffer,validateOrdreData,checkProductsExistsInDB,checkUserStatus,totalPrice};
-
-// async function totalPrice(req, res, next) {
-//     let orders = req.body.details.order;
-//     let totalPrice = 0;
-  
-//     const ordersAfterOffer = await Promise.all(
-//       orders.map(async (order) => {
-//         const foundOffer = await findOfferByProductName(order.name);
-//         let priceAfterDiscount = order.price;
-//         if (foundOffer.length > 0) {
-//           foundOffer.forEach((offer) => {
-//             if (Date.now() < offer.expire_timestamp) {
-//               priceAfterDiscount = order.price - parseInt(offer.value);
-//             }
-//           });
-//         }
-  
-//         return {
-//           name: order.name,
-//           price: priceAfterDiscount,
-//         };
-//       })
-//     );
-  
-//     ordersAfterOffer.forEach((order) => {
-//       totalPrice += parseInt(order.price);
-//     });
-  
-//     req.body.totalPrice = totalPrice;
-//     console.log(totalPrice);
-//     next();
-//   }
