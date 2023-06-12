@@ -214,7 +214,7 @@ the request should be ..
     "offer":{
         "productId":"coffee-0lp6ter3bh",
         "value": "44",
-        "expires":"2,hours"  // expiration time it takes (hours and days ) but you it must contain ','
+        "expires":"2,hours"  // expiration time it takes (hours and days ), it must contain ','
     }
 }
 ```
