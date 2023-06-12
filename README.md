@@ -55,16 +55,20 @@ Go to `localhost:3000/api/beans/order` to make order .
 POST method 
 the request should be .. 
 ```JSON
-    {        
+{
     "details": {
-        "order":[
+        "order": [
             {
-			"name": "Kaffe Latte",
-			"price": 54
-       		}
-        ]	       
-    }	
+                "name": "Kaffe Latte",
+                "price": 54
+            },
+            {
+                "name": "Bryggkaffe",
+                "price": 39
+            }
+        ]
     }
+}
 ```
 
 the response will be.. 
