@@ -224,7 +224,7 @@ the response will be..
     "id": "G45BN974A3",
     "product": "Kaffe Latte",
     "productId": "coffee-0lp6ter3bh",
-    "value": "44",
+    "value": "44%", // the value represents either a fixed discount (e.g., '10') or a percentage discount (e.g., '10%')
     "createdAt": "2023-06-12,01:25:13",
     "expires": "2,hours",
     "expire_date": "2023-06-12",
